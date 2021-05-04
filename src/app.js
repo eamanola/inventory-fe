@@ -5,6 +5,7 @@ import {
   AppBar, Tabs, Tab,
   List, ListItem, ListItemText,
   Backdrop, CircularProgress,
+  Grid,
 } from '@material-ui/core';
 
 import {
@@ -84,7 +85,7 @@ const App = () => {
               page[category] * ITEMS_PER_PAGE,
               (page[category] + 1) * ITEMS_PER_PAGE,
             ).map((item) => (
-              <ListItem key={item.id}>
+              <ListItem>
                 <ListItemText
                   primary={item.name}
                   secondary={(
@@ -104,16 +105,17 @@ const App = () => {
               </ListItem>
             ))}
           </List>
-          <Pagination
-            style={{ padding: '0.5em 0' }}
-            count={
-              Math.floor(list.length / ITEMS_PER_PAGE)
-              + (list.length % ITEMS_PER_PAGE > 0 ? 1 : 0)
-            }
-            color="primary"
-            page={page[category] + 1}
-            onChange={handlePageChange}
-          />
+          <Grid container justify="center" style={{ padding: '0.5em 0' }}>
+            <Pagination
+              count={
+                Math.floor(list.length / ITEMS_PER_PAGE)
+                + (list.length % ITEMS_PER_PAGE > 0 ? 1 : 0)
+              }
+              color="primary"
+              page={page[category] + 1}
+              onChange={handlePageChange}
+            />
+          </Grid>
         </Paper>
         <Backdrop open={loading} style={{ zIndex: 1 }}>
           <CircularProgress />
