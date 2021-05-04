@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:3002';
+const baseUrl = process.env.NODE_ENV === 'production'
+  ? '' : 'http://localhost:3002';
 
 const cache = {};
 
