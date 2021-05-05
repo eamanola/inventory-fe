@@ -45,13 +45,14 @@ const getFromServer = async (category) => {
 
 const getCategory = async (category) => {
   let data;
+  let message = null;
 
   data = getFromCache(category);
   if (data === null) {
-    data = await getFromServer(category);
+    [data, message] = await getFromServer(category);
   }
 
-  return data;
+  return [data, message];
 };
 
 export default { getCategory };
