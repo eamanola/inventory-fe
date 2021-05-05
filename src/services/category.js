@@ -19,13 +19,19 @@ const getFromServer = async (category) => {
   const url = `${baseUrl}/category/${category}`;
   try {
     const response = await axios.get(url);
-    const { data } = response;
-    cache[category] = {
-      data,
-      expires: (new Date()).getTime() + 1000 * 60 * 5,
-    };
+    const { data, fails } = response.data;
+    let message = null;
 
-    return data;
+    if (fails.length === 0) {
+      cache[category] = {
+        data,
+        expires: (new Date()).getTime() + 1000 * 60 * 5,
+      };
+    } else {
+      message = `${fails.join(', ')} systems could not be reached. Please try again later.`;
+    }
+
+    return [data, message];
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);

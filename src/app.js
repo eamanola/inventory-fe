@@ -14,13 +14,14 @@ import {
   red,
 } from '@material-ui/core/colors';
 
-import { Pagination } from '@material-ui/lab';
+import { Pagination, Alert } from '@material-ui/lab';
 
 import categoryService from './services/category';
 
 const App = () => {
   const [category, setCategory] = useState('gloves');
   const [list, setList] = useState([]);
+  const [notification, setNotification] = useState(null);
   const [page, setPage] = useState({
     gloves: 0,
     facemasks: 0,
@@ -41,8 +42,9 @@ const App = () => {
   useEffect(async () => {
     setTimeout(() => { setLoading(true); });
 
-    const data = await categoryService.getCategory(category);
+    const [data, message] = await categoryService.getCategory(category);
     setList(data);
+    setNotification(message);
     setTimeout(() => { setLoading(false); }, 1);
   }, [category]);
 
@@ -73,6 +75,11 @@ const App = () => {
     <>
       <Container maxWidth="sm">
         <Paper>
+          {notification && (
+            <Alert severity="warning" onClose={() => setNotification(null)}>
+              {notification}
+            </Alert>
+          )}
           <AppBar position="static">
             <Tabs value={category} onChange={handleCategoryChange}>
               <Tab value="gloves" label="Gloves" />
@@ -85,7 +92,7 @@ const App = () => {
               page[category] * ITEMS_PER_PAGE,
               (page[category] + 1) * ITEMS_PER_PAGE,
             ).map((item) => (
-              <ListItem>
+              <ListItem key={item.id}>
                 <ListItemText
                   primary={item.name}
                   secondary={(
